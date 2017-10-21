@@ -7,8 +7,8 @@ import {GameOfLife} from "./class/GameOfLife";
 //gol.initFromLoad(800);
 
 
-let gol = new GameOfLife(50, 50);
-gol.init(200, 6);
+let gol = new GameOfLife(50, 50, '.', '@');
+gol.init(1000, 4, 400);
 
 //console.log(gol.charpix.getCoordinate(11));
 

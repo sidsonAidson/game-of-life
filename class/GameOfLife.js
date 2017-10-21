@@ -23,11 +23,8 @@ class GameOfLife {
         this.start();
     }
     start(maxGeneration) {
-        this.print();
         let max = maxGeneration ? Math.abs(maxGeneration) : Number.POSITIVE_INFINITY;
-        setTimeout(() => {
-            this.nextGeneration(this.calculDelay, 0, max);
-        }, this.calculDelay);
+        this.nextGeneration(this.calculDelay, 1, max);
     }
     firstGeneration(maxInitalAlive = 10, maxFillStep = 3) {
         let cnt = 0;
@@ -43,6 +40,8 @@ class GameOfLife {
     }
     nextGeneration(delay, currentGen, maxGen) {
         GameOfLife.clearScreen();
+        this.charpix.print();
+        console.log('Génération : ', currentGen);
         let tmp = Array(this.charpix.width * this.charpix.heigth).fill(this.charpix.emptyPixel);
         for (let cnt = 0; cnt < this.charpix.width * this.charpix.heigth; cnt++) {
             let [x, y] = this.charpix.getCoordinate(cnt);
@@ -53,7 +52,6 @@ class GameOfLife {
             }
         }
         this.charpix.data = tmp;
-        this.charpix.print();
         if (++currentGen < maxGen) {
             setTimeout(() => {
                 this.nextGeneration(delay, currentGen, maxGen);
