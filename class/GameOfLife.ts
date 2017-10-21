@@ -2,10 +2,11 @@ import {CharPixel} from "./CharPix";
 
 declare let process: any;
 import * as os from 'os';
+import * as fs from 'fs';
 
 export class GameOfLife{
     public charpix: CharPixel;
-    private calculDelay: number = 800;
+    private calculDelay: number = 0;
     private first: boolean = false;
     private neighborsCountForBirth: number =  3;
     private neighborsCountForStayingSame: number =  2;
@@ -15,16 +16,21 @@ export class GameOfLife{
 
     }
 
-    init(maxInitalAlive: number = 10, maxFillStep: number = 3, calculDelay: number = 0): void{
-        this.calculDelay = calculDelay;
-        this.firstGeneration(maxInitalAlive, maxFillStep);
+    init(maxInitalAlive: number = 10, maxFillStep: number = 3, calculDelay: number = 800, initFirst: boolean = true): void{
+        this.calculDelay = calculDelay || this.calculDelay;
+        if(initFirst){
+            this.firstGeneration(maxInitalAlive, maxFillStep);
+        }
+
+        this.start();
+    }
+
+    initFromLoad(calculDelay: number = 800): void{
+        this.calculDelay = calculDelay || this.calculDelay;
+        this.start();
     }
 
     start(maxGeneration? :number):void{
-
-        if(!this.first){
-            //this.firstGeneration(10, 3)
-        }
 
         this.print();
 
@@ -103,7 +109,7 @@ export class GameOfLife{
     }
 
     private static clearScreen(): void{
-        //process.stdout.write('\x1Bc');
+        process.stdout.write('\x1Bc');
     }
 
      static getRandomArbitrary(min: number, max: number): number {
@@ -118,6 +124,35 @@ export class GameOfLife{
 
     print(): void{
         this.charpix.print();
+    }
+
+
+    public static fromFile(path: string, die: string = ' ', alive: string = 'X'): GameOfLife{
+        let data: string = fs.readFileSync(path).toString() || '';
+
+        let width = 0;
+        let height = 1;
+
+        let plat: Array<string> =  data.split('').filter((value: string) => {
+
+            if(value === os.EOL){
+                height++;
+            }
+            else{
+                width++;
+            }
+
+            return value !== os.EOL;
+        });
+
+        width = width / height;
+
+        let gof = new GameOfLife(width, height, die, alive);
+        gof.charpix.data = plat;
+
+
+        return gof;
+
     }
 
 

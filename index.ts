@@ -2,20 +2,13 @@ import {CharPixel} from './class/CharPix';
 import {GameOfLife} from "./class/GameOfLife";
 
 
-let gol = new GameOfLife(10, 5, '.', 'X');
-gol.charpix.data[0] = gol.charpix.fillChar;
+//let gol = GameOfLife.fromFile(__dirname + '/plateau/grenouille.gol', '.', 'X');
 
-gol.charpix.data[15] = gol.charpix.fillChar;
-gol.charpix.data[16] = gol.charpix.fillChar;
-gol.charpix.data[17] = gol.charpix.fillChar;
+//gol.initFromLoad(800);
 
-gol.charpix.data[24] = gol.charpix.fillChar;
-gol.charpix.data[25] = gol.charpix.fillChar;
-gol.charpix.data[26] = gol.charpix.fillChar;
 
-//gol.charpix.print();
-//gol.init(200, 1, 800);
-gol.start();
+let gol = new GameOfLife(50, 50);
+gol.init(200, 6);
 
 //console.log(gol.charpix.getCoordinate(11));
 

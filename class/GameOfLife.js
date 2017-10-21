@@ -1,22 +1,28 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const CharPix_1 = require("./CharPix");
+const os = require("os");
+const fs = require("fs");
 class GameOfLife {
     constructor(width, height, die = '.', alive = '*') {
-        this.calculDelay = 800;
+        this.calculDelay = 0;
         this.first = false;
         this.neighborsCountForBirth = 3;
         this.neighborsCountForStayingSame = 2;
         this.charpix = new CharPix_1.CharPixel(width, height, die, alive);
     }
-    init(maxInitalAlive = 10, maxFillStep = 3, calculDelay = 0) {
-        this.calculDelay = calculDelay;
-        this.firstGeneration(maxInitalAlive, maxFillStep);
+    init(maxInitalAlive = 10, maxFillStep = 3, calculDelay = 800, initFirst = true) {
+        this.calculDelay = calculDelay || this.calculDelay;
+        if (initFirst) {
+            this.firstGeneration(maxInitalAlive, maxFillStep);
+        }
+        this.start();
+    }
+    initFromLoad(calculDelay = 800) {
+        this.calculDelay = calculDelay || this.calculDelay;
+        this.start();
     }
     start(maxGeneration) {
-        if (!this.first) {
-            //this.firstGeneration(10, 3)
-        }
         this.print();
         let max = maxGeneration ? Math.abs(maxGeneration) : Number.POSITIVE_INFINITY;
         setTimeout(() => {
@@ -67,7 +73,7 @@ class GameOfLife {
         return aliveCells; //GameOfLife.getRandomArbitrary(1, 5);
     }
     static clearScreen() {
-        //process.stdout.write('\x1Bc');
+        process.stdout.write('\x1Bc');
     }
     static getRandomArbitrary(min, max) {
         return Math.floor(Math.random() * (max + 1 - min) + min);
@@ -79,6 +85,24 @@ class GameOfLife {
     }
     print() {
         this.charpix.print();
+    }
+    static fromFile(path, die = ' ', alive = 'X') {
+        let data = fs.readFileSync(path).toString() || '';
+        let width = 0;
+        let height = 1;
+        let plat = data.split('').filter((value) => {
+            if (value === os.EOL) {
+                height++;
+            }
+            else {
+                width++;
+            }
+            return value !== os.EOL;
+        });
+        width = width / height;
+        let gof = new GameOfLife(width, height, die, alive);
+        gof.charpix.data = plat;
+        return gof;
     }
 }
 exports.GameOfLife = GameOfLife;
