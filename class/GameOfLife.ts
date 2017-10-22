@@ -16,10 +16,15 @@ export class GameOfLife{
 
     }
 
-    init(maxInitalAlive: number = 10, maxFillStep: number = 3, calculDelay: number = 800, initFirst: boolean = true): void{
+    init(maxInitalAlive: number = 10, density: number = 3, calculDelay: number = 800, initFirst: boolean = true): void{
+        density = density > 1 ? density: 1;
+        density = density < 10 ? density : 10;
+
+        density = 11 - density;
+
         this.calculDelay = calculDelay || this.calculDelay;
         if(initFirst){
-            this.firstGeneration(maxInitalAlive, maxFillStep);
+            this.firstGeneration(maxInitalAlive, density);
         }
 
         this.start();
@@ -38,7 +43,7 @@ export class GameOfLife{
     }
 
 
-    firstGeneration(maxInitalAlive: number = 10, maxFillStep: number = 3): void{
+    firstGeneration(maxInitalAlive: number = 10, density: number = 3): void{
         let cnt = 0;
 
         for(let i = 0; i < this.charpix.width * this.charpix.heigth;){
@@ -48,7 +53,7 @@ export class GameOfLife{
                 cnt++;
             }
 
-            i += GameOfLife.getRandomArbitrary(1, maxFillStep);
+            i += GameOfLife.getRandomArbitrary(1, density);
         }
 
         this.first = true;
@@ -113,7 +118,7 @@ export class GameOfLife{
     }
 
      static randomWithProbability(): number {
-        let notRandomNumbers = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4];
+        let notRandomNumbers = [1, 1, 2, 2, 1, 3, 3, 4, 4, 1];
         let idx = Math.floor(Math.random() * notRandomNumbers.length);
         return notRandomNumbers[idx];
     }

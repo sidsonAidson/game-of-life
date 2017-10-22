@@ -11,10 +11,13 @@ class GameOfLife {
         this.neighborsCountForStayingSame = 2;
         this.charpix = new CharPix_1.CharPixel(width, height, die, alive);
     }
-    init(maxInitalAlive = 10, maxFillStep = 3, calculDelay = 800, initFirst = true) {
+    init(maxInitalAlive = 10, density = 3, calculDelay = 800, initFirst = true) {
+        density = density > 1 ? density : 1;
+        density = density < 10 ? density : 10;
+        density = 11 - density;
         this.calculDelay = calculDelay || this.calculDelay;
         if (initFirst) {
-            this.firstGeneration(maxInitalAlive, maxFillStep);
+            this.firstGeneration(maxInitalAlive, density);
         }
         this.start();
     }
@@ -26,7 +29,7 @@ class GameOfLife {
         let max = maxGeneration ? Math.abs(maxGeneration) : Number.POSITIVE_INFINITY;
         this.nextGeneration(this.calculDelay, 1, max);
     }
-    firstGeneration(maxInitalAlive = 10, maxFillStep = 3) {
+    firstGeneration(maxInitalAlive = 10, density = 3) {
         let cnt = 0;
         for (let i = 0; i < this.charpix.width * this.charpix.heigth;) {
             let fill = 1 === GameOfLife.randomWithProbability();
@@ -34,7 +37,7 @@ class GameOfLife {
                 this.charpix.data[i] = this.charpix.fillChar;
                 cnt++;
             }
-            i += GameOfLife.getRandomArbitrary(1, maxFillStep);
+            i += GameOfLife.getRandomArbitrary(1, density);
         }
         this.first = true;
     }
@@ -77,7 +80,7 @@ class GameOfLife {
         return Math.floor(Math.random() * (max + 1 - min) + min);
     }
     static randomWithProbability() {
-        let notRandomNumbers = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4];
+        let notRandomNumbers = [1, 1, 2, 2, 1, 3, 3, 4, 4, 1];
         let idx = Math.floor(Math.random() * notRandomNumbers.length);
         return notRandomNumbers[idx];
     }
