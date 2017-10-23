@@ -10,8 +10,8 @@ class CharPixel {
      * @param {string} fillChar
      */
     constructor(width, heigth, emptyPixel = '.', fillChar = '*') {
-        this.leftPadding = 50;
-        this.TopPadding = 5;
+        this.leftPadding = 2;
+        this.TopPadding = 2;
         this._width = width;
         this._heigth = heigth;
         this._emptyPixel = emptyPixel;

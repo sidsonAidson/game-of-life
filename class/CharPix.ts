@@ -7,8 +7,8 @@ export class CharPixel{
     private _emptyPixel: string;
     private _fillChar: string;
     private _data: Array<string>;
-    private leftPadding: number = 50;
-    private TopPadding: number = 5;
+    private leftPadding: number = 2;
+    private TopPadding: number = 2;
 
     /**
      *

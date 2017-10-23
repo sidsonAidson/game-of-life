@@ -3,6 +3,7 @@ import {CharPixel} from "./CharPix";
 declare let process: any;
 import * as os from 'os';
 import * as fs from 'fs';
+import * as childProcess from 'child_process';
 
 export class GameOfLife{
     public charpix: CharPixel;
@@ -63,8 +64,8 @@ export class GameOfLife{
     nextGeneration(delay: number, currentGen: number, maxGen: number): void{
 
         GameOfLife.clearScreen();
+        console.log('Génération : ', currentGen);
         this.charpix.print();
-        console.log('Génération : ', currentGen)
         let tmp =  Array<string>(this.charpix.width * this.charpix.heigth).fill(this.charpix.emptyPixel);
 
         for(let cnt = 0; cnt < this.charpix.width * this.charpix.heigth; cnt++){
@@ -110,7 +111,12 @@ export class GameOfLife{
     }
 
     private static clearScreen(): void{
-        process.stdout.write('\x1Bc');
+        if(os.platform() === 'darwin'){
+            console.log(childProcess.execSync("clear && printf '\\e[3J'").toString());
+        }
+        else{
+            process.stdout.write('\x1Bc');
+        }
     }
 
      static getRandomArbitrary(min: number, max: number): number {
@@ -118,7 +124,7 @@ export class GameOfLife{
     }
 
      static randomWithProbability(): number {
-        let notRandomNumbers = [1, 1, 2, 2, 1, 3, 3, 4, 4, 1];
+        let notRandomNumbers = [1, 1, 2, 1, 2, 1, 3, 1, 1,3, 4, 1, 4, 1, 1];
         let idx = Math.floor(Math.random() * notRandomNumbers.length);
         return notRandomNumbers[idx];
     }

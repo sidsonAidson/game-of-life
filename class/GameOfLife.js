@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const CharPix_1 = require("./CharPix");
 const os = require("os");
 const fs = require("fs");
+const childProcess = require("child_process");
 class GameOfLife {
     constructor(width, height, die = '.', alive = '*') {
         this.calculDelay = 0;
@@ -43,8 +44,8 @@ class GameOfLife {
     }
     nextGeneration(delay, currentGen, maxGen) {
         GameOfLife.clearScreen();
-        this.charpix.print();
         console.log('Génération : ', currentGen);
+        this.charpix.print();
         let tmp = Array(this.charpix.width * this.charpix.heigth).fill(this.charpix.emptyPixel);
         for (let cnt = 0; cnt < this.charpix.width * this.charpix.heigth; cnt++) {
             let [x, y] = this.charpix.getCoordinate(cnt);
@@ -74,13 +75,18 @@ class GameOfLife {
         return aliveCells; //GameOfLife.getRandomArbitrary(1, 5);
     }
     static clearScreen() {
-        process.stdout.write('\x1Bc');
+        if (os.platform() === 'darwin') {
+            console.log(childProcess.execSync("clear && printf '\\e[3J'").toString());
+        }
+        else {
+            process.stdout.write('\x1Bc');
+        }
     }
     static getRandomArbitrary(min, max) {
         return Math.floor(Math.random() * (max + 1 - min) + min);
     }
     static randomWithProbability() {
-        let notRandomNumbers = [1, 1, 2, 2, 1, 3, 3, 4, 4, 1];
+        let notRandomNumbers = [1, 1, 2, 1, 2, 1, 3, 1, 1, 3, 4, 1, 4, 1, 1];
         let idx = Math.floor(Math.random() * notRandomNumbers.length);
         return notRandomNumbers[idx];
     }
